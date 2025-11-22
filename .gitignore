@@ -1,0 +1,35 @@
+.env
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json # OPTIONAL: Keep this line ONLY if you use yarn exclusively and don't want npm locks. Usually, you KEEP package-lock.json.
+
+# Environment variables (CRITICAL: Never commit secrets)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+.nuxt/
+
+# Testing coverage
+coverage/
+.nyc_output/
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# IDE Settings (Optional but recommended)
+.idea/
+.vscode/
+*.swp
+*.swo
