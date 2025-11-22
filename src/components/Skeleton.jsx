@@ -1,3 +1,4 @@
+import React from "react";
 /**
  * Skeleton loader component for course cards
  */
