@@ -10,7 +10,12 @@ export async function fetchWithError(url, options = {}) {
   // Always include credentials to send cookies
   const finalOptions = {
     ...options,
-    credentials: options.credentials || "include",
+    credentials: "include", // <--- THIS IS THE CRITICAL FIX
+    headers: {
+      ...options.headers,
+      // Ensure we accept JSON
+      "Accept": "application/json",
+    },
   };
 
   const res = await fetch(url, finalOptions);
@@ -38,6 +43,12 @@ export async function fetchWithError(url, options = {}) {
         : text
           ? text
           : "No response body";
+    
+    // Special handling for 401 to help debug
+    if (res.status === 401) {
+        console.error("API 401 Unauthorized - Cookie might be missing");
+    }
+
     throw new Error(
       `Request failed ${res.status} ${res.statusText}: ${bodyMsg}`
     );
