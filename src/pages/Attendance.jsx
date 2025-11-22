@@ -14,11 +14,20 @@ export default function Attendance() {
 
   // Track which courses have been marked for today
   const [markedCourses, setMarkedCourses] = useState({});
+  
+  // Track which courses are currently being updated to prevent double-clicks
+  const [updatingCourses, setUpdatingCourses] = useState({});
 
   async function markCourse(course, status) {
-    if (markedCourses[course.id]) return; // Already marked all or this course today
+    // Prevent action if already marked OR currently being updated
+    if (markedCourses[course.id] || updatingCourses[course.id]) return; 
+    
+    // Set loading state for this specific course
+    setUpdatingCourses((prev) => ({ ...prev, [course.id]: true }));
+
     const payload = { ...course };
     payload[status] = Number(course[status] || 0) + 1;
+    
     try {
       await updateCourse(course.id, payload);
       setMarkedCourses((prev) => ({
@@ -26,7 +35,16 @@ export default function Attendance() {
         [course.id]: true,
       }));
       console.log(`Marked course ${course.id} as ${status}`);
-    } catch (e) {}
+    } catch (e) {
+      alert("Failed to update attendance. Please try again.");
+    } finally {
+      // Clear the updating state regardless of success or failure
+      setUpdatingCourses((prev) => {
+        const next = { ...prev };
+        delete next[course.id]; // Fixed typo here
+        return next;
+      });
+    }
   }
 
   return (
@@ -48,7 +66,12 @@ export default function Attendance() {
             const aboveCriteria =
               attendancePercentage >= course.criteria ||
               (!course.present && !course.absent);
-            const courseDisabled = markedCourses[course.id];
+            
+            // Check if this course is marked or currently updating
+            const isUpdating = updatingCourses[course.id];
+            const isMarked = markedCourses[course.id];
+            const courseDisabled = isMarked || isUpdating;
+
             return (
               <div
                 key={course.id || idx}
@@ -76,25 +99,25 @@ export default function Attendance() {
                 </div>
                 <div className="flex flex-col sm:flex-row gap-2 mt-2">
                   <button
-                    className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-base font-semibold disabled:opacity-50 transition"
+                    className={`px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-base font-semibold disabled:opacity-50 transition ${isUpdating ? 'cursor-wait' : ''}`}
                     onClick={() => markCourse(course, "present")}
                     disabled={courseDisabled}
                   >
-                    Present
+                    {isUpdating ? "..." : "Present"}
                   </button>
                   <button
-                    className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-base font-semibold disabled:opacity-50 transition"
+                    className={`px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-base font-semibold disabled:opacity-50 transition ${isUpdating ? 'cursor-wait' : ''}`}
                     onClick={() => markCourse(course, "absent")}
                     disabled={courseDisabled}
                   >
-                    Absent
+                    {isUpdating ? "..." : "Absent"}
                   </button>
                   <button
-                    className="px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-white rounded text-base font-semibold disabled:opacity-50 transition"
+                    className={`px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-white rounded text-base font-semibold disabled:opacity-50 transition ${isUpdating ? 'cursor-wait' : ''}`}
                     onClick={() => markCourse(course, "cancelled")}
                     disabled={courseDisabled}
                   >
-                    Cancelled
+                    {isUpdating ? "..." : "Cancelled"}
                   </button>
                 </div>
               </div>
