@@ -41,7 +41,7 @@ export default function Attendance() {
       // Clear the updating state regardless of success or failure
       setUpdatingCourses((prev) => {
         const next = { ...prev };
-        delete next[course.id]; // Fixed typo here
+        delete next[course.id]; // Fixed logic error here
         return next;
       });
     }
@@ -80,15 +80,15 @@ export default function Attendance() {
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <div className="font-bold text-base text-gray-900 dark:text-white">
+                  <div className="font-bold text-base text-gray-900 dark:text-white truncate">
                     {course.IndivCourse}
                   </div>
                   <span
-                    className={`text-sm font-semibold ${
+                    className={`text-sm font-semibold whitespace-nowrap ml-2 ${
                       aboveCriteria ? "text-green-600" : "text-red-500"
                     }`}
                   >
-                    {attendancePercentage.toFixed(2)}% attendance
+                    {attendancePercentage.toFixed(2)}%
                   </span>
                 </div>
                 <div className="text-sm text-gray-500 dark:text-gray-400">
@@ -97,23 +97,25 @@ export default function Attendance() {
                 <div className="text-xs text-gray-500 dark:text-gray-400">
                   Criteria: {course.criteria}%
                 </div>
-                <div className="flex flex-col sm:flex-row gap-2 mt-2">
+                
+                {/* Fixed Button Layout */}
+                <div className="flex flex-wrap gap-2 mt-2 w-full">
                   <button
-                    className={`px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-base font-semibold disabled:opacity-50 transition ${isUpdating ? 'cursor-wait' : ''}`}
+                    className={`flex-1 px-2 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm font-semibold disabled:opacity-50 transition min-w-[80px] ${isUpdating ? 'cursor-wait' : ''}`}
                     onClick={() => markCourse(course, "present")}
                     disabled={courseDisabled}
                   >
                     {isUpdating ? "..." : "Present"}
                   </button>
                   <button
-                    className={`px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-base font-semibold disabled:opacity-50 transition ${isUpdating ? 'cursor-wait' : ''}`}
+                    className={`flex-1 px-2 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded text-sm font-semibold disabled:opacity-50 transition min-w-[80px] ${isUpdating ? 'cursor-wait' : ''}`}
                     onClick={() => markCourse(course, "absent")}
                     disabled={courseDisabled}
                   >
                     {isUpdating ? "..." : "Absent"}
                   </button>
                   <button
-                    className={`px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-white rounded text-base font-semibold disabled:opacity-50 transition ${isUpdating ? 'cursor-wait' : ''}`}
+                    className={`flex-1 px-2 py-1.5 bg-yellow-500 hover:bg-yellow-600 text-white rounded text-sm font-semibold disabled:opacity-50 transition min-w-[80px] ${isUpdating ? 'cursor-wait' : ''}`}
                     onClick={() => markCourse(course, "cancelled")}
                     disabled={courseDisabled}
                   >
