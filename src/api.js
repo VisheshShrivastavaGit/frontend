@@ -1,24 +1,19 @@
 export const apiUrl = import.meta.env.VITE_API_URL || "";
 
-export async function get(path) {
-  const base = apiUrl;
-  const url = base ? `${base}${path}` : path;
-  return fetchWithError(url, { credentials: "include" });
-}
-
+// Helper function to handle fetch with common options and error handling
 export async function fetchWithError(url, options = {}) {
-  // Always include credentials to send cookies
+  // CRITICAL: Always include credentials to send cookies (sessionToken) cross-origin
   const finalOptions = {
     ...options,
-    credentials: "include", // <--- THIS IS THE CRITICAL FIX
+    credentials: "include", 
     headers: {
       ...options.headers,
-      // Ensure we accept JSON
       "Accept": "application/json",
     },
   };
 
   const res = await fetch(url, finalOptions);
+  
   let text;
   try {
     text = await res.text();
@@ -26,7 +21,7 @@ export async function fetchWithError(url, options = {}) {
     text = "";
   }
 
-  // Try parse JSON if any
+  // Try parsing JSON
   let data = null;
   if (text) {
     try {
@@ -44,9 +39,9 @@ export async function fetchWithError(url, options = {}) {
           ? text
           : "No response body";
     
-    // Special handling for 401 to help debug
+    // Log 401 errors for debugging
     if (res.status === 401) {
-        console.error("API 401 Unauthorized - Cookie might be missing");
+        console.error("API 401 Unauthorized - Cookie likely missing or blocked by browser privacy settings.");
     }
 
     throw new Error(
@@ -56,8 +51,16 @@ export async function fetchWithError(url, options = {}) {
 
   // Successful response
   if (data !== null) return data;
-  // If no JSON, return raw text
   return text;
+}
+
+// --- EXPORTED API METHODS ---
+
+export async function get(path) {
+  const base = apiUrl;
+  const url = base ? `${base}${path}` : path;
+  // Pass credentials: "include" explicitly, though fetchWithError handles it
+  return fetchWithError(url, { method: "GET", credentials: "include" });
 }
 
 export async function post(path, body) {
@@ -69,7 +72,7 @@ export async function post(path, body) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
-      credentials: "include"
+      credentials: "include" 
     }
   );
 }
@@ -83,7 +86,7 @@ export async function put(path, body) {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
-      credentials: "include"
+      credentials: "include" 
     }
   );
 }
@@ -91,5 +94,8 @@ export async function put(path, body) {
 export async function del(path) {
   const base = apiUrl;
   const url = base ? `${base}${path}` : path;
-  return fetchWithError(url, { method: "DELETE", credentials: "include" });
+  return fetchWithError(url, { 
+    method: "DELETE", 
+    credentials: "include" 
+  });
 }
