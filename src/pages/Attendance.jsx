@@ -4,8 +4,6 @@ import { useGoogleAuth } from "../contexts/GoogleAuthProvider";
 import {
   getMarkedCoursesToday,
   markCourseToday,
-  isCourseMarkedToday,
-  getCourseStatusToday,
 } from "../utils/attendanceTracking";
 
 export default function Attendance() {
@@ -20,13 +18,9 @@ export default function Attendance() {
       c.days.map((d) => d.toLowerCase()).includes(today)
   );
 
-  // Track which courses have been marked for today (from localStorage)
   const [markedCourses, setMarkedCourses] = useState({});
-
-  // Track which courses are currently being updated to prevent double-clicks
   const [updatingCourses, setUpdatingCourses] = useState({});
 
-  // Load marked courses from localStorage on mount
   useEffect(() => {
     if (user) {
       const marked = getMarkedCoursesToday(user.id);
@@ -35,10 +29,8 @@ export default function Attendance() {
   }, [user]);
 
   async function markCourse(course, status) {
-    // Prevent action if already marked OR currently being updated
     if (markedCourses[course.id] || updatingCourses[course.id]) return;
 
-    // Set loading state for this specific course
     setUpdatingCourses((prev) => ({ ...prev, [course.id]: true }));
 
     const payload = { ...course };
@@ -46,21 +38,14 @@ export default function Attendance() {
 
     try {
       await updateCourse(course.id, payload);
-
-      // Mark in localStorage
       markCourseToday(user.id, course.id, status);
-
-      // Update local state
       setMarkedCourses((prev) => ({
         ...prev,
         [course.id]: { status, timestamp: new Date().toISOString() },
       }));
-
-      console.log(`Marked course ${course.id} as ${status} for today`);
     } catch (e) {
       alert("Failed to update attendance. Please try again.");
     } finally {
-      // Clear the updating state regardless of success or failure
       setUpdatingCourses((prev) => {
         const next = { ...prev };
         delete next[course.id];
@@ -89,7 +74,6 @@ export default function Attendance() {
               attendancePercentage >= course.criteria ||
               (!course.present && !course.absent);
 
-            // Check if this course is marked or currently updating
             const isUpdating = updatingCourses[course.id];
             const isMarked = !!markedCourses[course.id];
             const markedStatus = markedCourses[course.id]?.status;
@@ -119,7 +103,6 @@ export default function Attendance() {
                   Criteria: {course.criteria}%
                 </div>
 
-                {/* Show marked status */}
                 {isMarked && (
                   <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 flex items-center gap-1">
                     <span>✓</span>
@@ -127,29 +110,39 @@ export default function Attendance() {
                   </div>
                 )}
 
-                {/* Buttons */}
                 <div className="flex flex-wrap gap-2 mt-2 w-full">
                   <button
-                    className={`flex-1 px-2 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition min-w-[80px] ${isUpdating ? 'cursor-wait' : ''}`}
+                    className={`flex-1 px-2 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition min-w-[80px] ${isUpdating ? "cursor-wait" : ""
+                      }`}
                     onClick={() => markCourse(course, "present")}
                     disabled={courseDisabled}
-                    title={isMarked ? "Already marked for today" : "Mark as present"}
+                    title={
+                      isMarked ? "Already marked for today" : "Mark as present"
+                    }
                   >
                     {isUpdating ? "..." : "Present"}
                   </button>
                   <button
-                    className={`flex-1 px-2 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition min-w-[80px] ${isUpdating ? 'cursor-wait' : ''}`}
+                    className={`flex-1 px-2 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition min-w-[80px] ${isUpdating ? "cursor-wait" : ""
+                      }`}
                     onClick={() => markCourse(course, "absent")}
                     disabled={courseDisabled}
-                    title={isMarked ? "Already marked for today" : "Mark as absent"}
+                    title={
+                      isMarked ? "Already marked for today" : "Mark as absent"
+                    }
                   >
                     {isUpdating ? "..." : "Absent"}
                   </button>
                   <button
-                    className={`flex-1 px-2 py-1.5 bg-yellow-500 hover:bg-yellow-600 text-white rounded text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition min-w-[80px] ${isUpdating ? 'cursor-wait' : ''}`}
+                    className={`flex-1 px-2 py-1.5 bg-yellow-500 hover:bg-yellow-600 text-white rounded text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition min-w-[80px] ${isUpdating ? "cursor-wait" : ""
+                      }`}
                     onClick={() => markCourse(course, "cancelled")}
                     disabled={courseDisabled}
-                    title={isMarked ? "Already marked for today" : "Mark as cancelled"}
+                    title={
+                      isMarked
+                        ? "Already marked for today"
+                        : "Mark as cancelled"
+                    }
                   >
                     {isUpdating ? "..." : "Cancelled"}
                   </button>
