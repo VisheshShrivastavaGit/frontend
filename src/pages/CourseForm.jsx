@@ -1,11 +1,10 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { get as apiGet } from "../api";
 import { useData } from "../contexts/DataProvider";
 import { useGoogleAuth } from "../contexts/GoogleAuthProvider";
 
 export default function CourseForm() {
-  const { createCourse, updateCourse } = useData();
+  const { createCourse, updateCourse, getCourse } = useData();
   const { user } = useGoogleAuth();
   const { id } = useParams();
   const isEdit = !!id;
@@ -26,10 +25,11 @@ export default function CourseForm() {
     let mounted = true;
     if (!isEdit || !user) return;
     setLoading(true);
-    apiGet(`/attendance/${user.id}/${id}`)
-      .then((res) => {
+
+    // Use getCourse which handles both demo and real mode
+    getCourse(Number(id))
+      .then((c) => {
         if (!mounted) return;
-        const c = res?.data;
         if (c) {
           setForm({
             IndivCourse: c.IndivCourse || "",
@@ -53,7 +53,7 @@ export default function CourseForm() {
     return () => {
       mounted = false;
     };
-  }, [id, isEdit, user]);
+  }, [id, isEdit, user, getCourse]);
 
   async function submit(e) {
     e.preventDefault();
