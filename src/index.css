@@ -8,10 +8,6 @@ html {
 }
 
 :root{
-  --app-bg: #f8fafc;
-  --app-text: #0f172a;
-}
-.dark{
   --app-bg: #0b1220;
   --app-text: #e6eef8;
 }

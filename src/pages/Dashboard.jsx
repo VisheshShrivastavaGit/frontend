@@ -1,5 +1,5 @@
 import React from "react";
-import { useData } from "../contexts/DataProvider";
+import { useData } from "../contexts/AppProvider";
 import { Link } from "react-router-dom";
 import { CourseSkeleton } from "../components/Skeleton";
 
@@ -120,9 +120,9 @@ export default function Dashboard() {
                   </span>
                   <span
                     className={`text-sm ${attendancePercentage >= course.criteria ||
-                        (!course.present && !course.absent)
-                        ? "text-green-500"
-                        : "text-red-500"
+                      (!course.present && !course.absent)
+                      ? "text-green-500"
+                      : "text-red-500"
                       }`}
                   >
                     {attendancePercentage.toFixed(2)}% attendance

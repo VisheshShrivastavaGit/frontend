@@ -1,6 +1,5 @@
 import React from "react";
-import { useTheme } from "../contexts/ThemeProvider";
-import { useGoogleAuth } from "../contexts/GoogleAuthProvider";
+import { useAuth } from "../contexts/AppProvider";
 import { Link } from "react-router-dom";
 import Searchbar from "./Searchbar";
 
@@ -8,7 +7,7 @@ function UserButton() {
   return (
     <Link
       to="/profile"
-      className="flex items-center gap-2 px-2 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600"
+      className="flex items-center gap-2 px-2 py-1 rounded bg-gray-700 text-gray-200 hover:bg-gray-600"
     >
       <span className="hidden sm:inline">Profile</span>
       <svg
@@ -38,7 +37,7 @@ function UserButton() {
 function MobileSidebarButton({ onOpenSidebar }) {
   return (
     <button
-      className="md:hidden px-2 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+      className="md:hidden px-2 py-1 rounded bg-gray-700 text-gray-200"
       title="Open menu"
       onClick={onOpenSidebar}
     >
@@ -61,10 +60,10 @@ function MobileSidebarButton({ onOpenSidebar }) {
 }
 
 function DemoModeBadge() {
-  const { handleLogout } = useGoogleAuth();
+  const { handleLogout } = useAuth();
 
   return (
-    <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 border border-yellow-300 dark:border-yellow-700">
+    <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-900 text-yellow-200 border border-yellow-700">
       <span className="text-sm font-medium">🎯 Demo Mode</span>
       <button
         onClick={handleLogout}
@@ -78,14 +77,13 @@ function DemoModeBadge() {
 }
 
 export default function Appbar({ onOpenSidebar }) {
-  const { theme, toggle } = useTheme();
-  const { isDemoMode } = useGoogleAuth();
+  const { isDemoMode } = useAuth();
 
   return (
-    <header className="w-full flex items-center justify-between px-4 md:px-6 py-3 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 ">
+    <header className="w-full flex items-center justify-between px-4 md:px-6 py-3 bg-gray-900 border-b border-gray-800">
       <div className="flex items-center gap-2">
         <MobileSidebarButton onOpenSidebar={onOpenSidebar} />
-        <span className="font-bold text-lg text-gray-900 dark:text-white hidden md:inline">
+        <span className="font-bold text-lg text-white hidden md:inline">
           Track Your Attendance
         </span>
       </div>
@@ -94,13 +92,6 @@ export default function Appbar({ onOpenSidebar }) {
         <div className="hidden md:block w-64">
           <Searchbar />
         </div>
-        <button
-          onClick={toggle}
-          className="px-2 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
-          title="Toggle theme"
-        >
-          {theme === "dark" ? "🌙" : "☀️"}
-        </button>
         <UserButton />
       </div>
     </header>

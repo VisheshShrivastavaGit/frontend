@@ -1,5 +1,5 @@
 import React from "react";
-import { useData } from "../contexts/DataProvider";
+import { useData } from "../contexts/AppProvider";
 export default function Searchbar() {
   const { searchedCourses, changeSearch } = useData();
   return (

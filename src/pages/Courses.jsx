@@ -1,6 +1,6 @@
 import React from "react";
 import CourseCard from "../components/CourseCard";
-import { useData } from "../contexts/DataProvider";
+import { useData } from "../contexts/AppProvider";
 import { Link } from "react-router-dom";
 
 export default function Courses() {

@@ -1,7 +1,6 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useData } from "../contexts/DataProvider";
-import { useGoogleAuth } from "../contexts/GoogleAuthProvider";
+import { useData, useAuth } from "../contexts/AppProvider";
 
 // Helper function to convert 24h time to 12h AM/PM format
 function formatTime(time24) {
@@ -15,7 +14,7 @@ function formatTime(time24) {
 
 export default function CourseForm() {
   const { createCourse, updateCourse, getCourse } = useData();
-  const { user } = useGoogleAuth();
+  const { user } = useAuth();
   const { id } = useParams();
   const isEdit = !!id;
   const [loading, setLoading] = React.useState(false);
@@ -351,8 +350,8 @@ export default function CourseForm() {
                   key={day}
                   onClick={() => toggleDay(day)}
                   className={`px-3 py-1 border rounded-lg shadow transition-colors duration-150 ${form.days.includes(day)
-                      ? "bg-blue-600 text-white"
-                      : "bg-white text-black dark:bg-gray-800 dark:text-white"
+                    ? "bg-blue-600 text-white"
+                    : "bg-white text-black dark:bg-gray-800 dark:text-white"
                     }`}
                 >
                   {day.charAt(0).toUpperCase() + day.slice(1)}
