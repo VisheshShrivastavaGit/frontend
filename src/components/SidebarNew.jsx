@@ -28,7 +28,7 @@ export function SidebarNew() {
           }
         >
           <IconWrapper>{it.icon()}</IconWrapper>
-          <span className="md:hidden lg:inline-block">{it.title}</span>
+          <span>{it.title}</span>
         </NavLink>
       ))}
     </div>

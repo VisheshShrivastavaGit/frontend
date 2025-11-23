@@ -8,7 +8,7 @@ function UserButton() {
       to="/profile"
       className="flex items-center gap-2 px-2 py-1 rounded bg-gray-700 text-gray-200 hover:bg-gray-600"
     >
-      <span className="hidden sm:inline">Profile</span>
+      <span>Profile</span>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="h-5 w-5"
@@ -33,31 +33,6 @@ function UserButton() {
   );
 }
 
-function MobileSidebarButton({ onOpenSidebar }) {
-  return (
-    <button
-      className="md:hidden px-2 py-1 rounded bg-gray-700 text-gray-200"
-      title="Open menu"
-      onClick={onOpenSidebar}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-6 w-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M4 6h16M4 12h16M4 18h16"
-        />
-      </svg>
-    </button>
-  );
-}
-
 function DemoModeBadge() {
   const { handleLogout } = useAuth();
 
@@ -75,18 +50,17 @@ function DemoModeBadge() {
   );
 }
 
-export default function Appbar({ onOpenSidebar }) {
+export default function Appbar() {
   const { isDemoMode } = useAuth();
 
   return (
-    <header className="w-full flex items-center justify-between px-4 md:px-6 py-3 bg-gray-900 border-b border-gray-800">
+    <header className="w-full flex items-center justify-between px-6 py-3 bg-gray-900 border-b border-gray-800">
       <div className="flex items-center gap-2">
-        <MobileSidebarButton onOpenSidebar={onOpenSidebar} />
-        <span className="font-bold text-lg text-white hidden md:inline">
+        <span className="font-bold text-lg text-white">
           Track Your Attendance
         </span>
       </div>
-      <div className="flex items-center gap-2 md:gap-4 w-auto">
+      <div className="flex items-center gap-4">
         {isDemoMode && <DemoModeBadge />}
         <UserButton />
       </div>
