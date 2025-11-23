@@ -25,6 +25,9 @@ A modern, desktop-first React application for tracking course attendance. Built 
 
 ```
 src/
+├── api.js              # Axios configuration
+├── App.jsx             # Route definitions
+├── main.jsx            # Entry point & Providers
 ├── components/         # Reusable UI components
 │   ├── Appbar.jsx     # Top navigation
 │   ├── SidebarNew.jsx # Desktop sidebar
@@ -67,5 +70,5 @@ src/
 
 - **Desktop-Only**: Optimized for browser usage on laptops/desktops.
 - **Simplified State**: Merged multiple contexts into a single `AppProvider` for easier maintenance.
-- **Direct Routing**: Removed complex route wrappers in favor of simple, direct routing.
-- **No External UI Libraries**: Custom components built with Tailwind for maximum control and minimal bundle size.
+- **Nested Routing**: Organized `/courses` routes for better structure.
+- **Axios Layer**: Centralized API configuration for automatic cookie handling.

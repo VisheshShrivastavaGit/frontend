@@ -16,7 +16,6 @@ export default function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/dashboard" element={<Dashboard />} />
 
-        {/* Nested Courses Routes */}
         <Route path="/courses">
           <Route index element={<Courses />} />
           <Route path="new" element={<CourseForm />} />
