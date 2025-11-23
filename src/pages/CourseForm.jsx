@@ -237,7 +237,7 @@ export default function CourseForm() {
               </div>
             </div>
             {form.timeofcourse && (
-              <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+              <div className="mt-2 text-sm text-gray-400">
                 <span className="font-medium">Display: </span>
                 {form.timeofcourse}
               </div>

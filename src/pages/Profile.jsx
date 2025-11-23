@@ -16,15 +16,9 @@ export default function Profile() {
   return (
     <div className="max-w-lg mx-auto p-6 rounded-lg bg-gray-800 border border-gray-700 mt-8">
       <div className="flex items-center gap-4 mb-6">
-        <img
-          src={
-            user.image ||
-            "https://ui-avatars.com/api/?name=" +
-            (user.name || user.user_name || "User")
-          }
-          alt="Profile"
-          className="h-20 w-20 rounded-full border"
-        />
+        <div className="h-20 w-20 rounded-full bg-blue-600 flex items-center justify-center text-white text-3xl font-bold">
+          {(user.name || user.user_name || "U")[0].toUpperCase()}
+        </div>
         <div>
           <h2 className="text-2xl font-bold text-white">
             {user.name || user.user_name || "User"}
