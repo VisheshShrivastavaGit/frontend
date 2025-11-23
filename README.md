@@ -19,7 +19,7 @@ A modern, desktop-first React application for tracking course attendance. Built 
 - **Routing**: React Router DOM v6
 - **State Management**: React Context API (AppProvider)
 - **Icons**: Heroicons (via SVG)
-- **HTTP Client**: Native Fetch API with custom wrapper
+- **HTTP Client**: Axios (with interceptors & auto-cookie handling)
 
 ## 📂 Project Structure
 

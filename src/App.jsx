@@ -15,10 +15,15 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/courses" element={<Courses />} />
-        <Route path="/courses/new" element={<CourseForm />} />
-        <Route path="/courses/:id" element={<CourseDetail />} />
-        <Route path="/courses/:id/edit" element={<CourseForm />} />
+
+        {/* Nested Courses Routes */}
+        <Route path="/courses">
+          <Route index element={<Courses />} />
+          <Route path="new" element={<CourseForm />} />
+          <Route path=":id" element={<CourseDetail />} />
+          <Route path=":id/edit" element={<CourseForm />} />
+        </Route>
+
         <Route path="/attendance" element={<Attendance />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/profile" element={<Profile />} />
