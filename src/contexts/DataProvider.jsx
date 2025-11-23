@@ -1,6 +1,7 @@
 import React from "react";
 import { get, post, put, del } from "../api";
 import { useGoogleAuth } from "./GoogleAuthProvider";
+import { useDemo } from "./DemoProvider";
 
 const DataContext = React.createContext(null);
 
@@ -13,7 +14,8 @@ export default function DataProvider({ children }) {
   const [searchedCourses, setSearchedCourses] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
-  const { user } = useGoogleAuth();
+  const { user, isDemoMode } = useGoogleAuth();
+  const demo = useDemo();
 
   const load = React.useCallback(async () => {
     console.log("Loading courses for user:", user);
@@ -21,6 +23,13 @@ export default function DataProvider({ children }) {
     setLoading(true);
     setError(null);
     try {
+      // If in demo mode, load from localStorage
+      if (isDemoMode) {
+        const demoCourses = demo.getDemoCourses();
+        setCourses(demoCourses);
+        return demoCourses;
+      }
+
       // Backend expects /attendance/:userId
       const res = await get(`/attendance/${user.id}`);
       const list = res?.data || [];
@@ -32,7 +41,7 @@ export default function DataProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, isDemoMode, demo]);
 
   React.useEffect(() => {
     if (user) load();
@@ -50,7 +59,15 @@ export default function DataProvider({ children }) {
       throw new Error("Invalid payload for creating course");
     } else if (courses.some((c) => c.IndivCourse === payload.IndivCourse))
       throw new Error("Course with the same name already exists");
+
     try {
+      // If in demo mode, use demo methods
+      if (isDemoMode) {
+        const created = demo.addDemoCourse(payload);
+        setCourses((c) => [created, ...c]);
+        return created;
+      }
+
       const res = await post(`/attendance/${user.id}`, payload);
       const created = res?.data;
       if (created) setCourses((c) => [created, ...c]);
@@ -63,6 +80,13 @@ export default function DataProvider({ children }) {
 
   async function updateCourse(id, payload) {
     try {
+      // If in demo mode, use demo methods
+      if (isDemoMode) {
+        const updated = demo.updateDemoCourse(id, payload);
+        setCourses((c) => c.map((x) => (x.id === updated.id ? updated : x)));
+        return updated;
+      }
+
       // Backend expects /attendance/:userId/:courseId
       const res = await put(`/attendance/${user.id}/${id}`, payload);
       console.log(payload, res);
@@ -77,6 +101,13 @@ export default function DataProvider({ children }) {
 
   async function deleteCourse(id) {
     try {
+      // If in demo mode, use demo methods
+      if (isDemoMode) {
+        demo.deleteDemoCourse(id);
+        setCourses((c) => c.filter((x) => x.id !== id));
+        return true;
+      }
+
       // Backend expects /attendance/:userId/:courseId
       await del(`/attendance/${user.id}/${id}`);
       setCourses((c) => c.filter((x) => x.id !== id));
@@ -88,6 +119,13 @@ export default function DataProvider({ children }) {
 
   async function deleteAll() {
     try {
+      // If in demo mode, use demo methods
+      if (isDemoMode) {
+        demo.deleteAllDemoCourses();
+        setCourses([]);
+        return true;
+      }
+
       // Backend expects /attendance/:userId
       await del(`/attendance/${user.id}`);
       setCourses([]);
@@ -99,6 +137,15 @@ export default function DataProvider({ children }) {
 
   async function resetAllStats() {
     try {
+      // If in demo mode, use demo methods
+      if (isDemoMode) {
+        demo.resetAllDemoStats();
+        setCourses((prev) =>
+          prev.map((c) => ({ ...c, present: 0, absent: 0, cancelled: 0 }))
+        );
+        return true;
+      }
+
       // Backend expects /attendance/:userId/reset
       await post(`/attendance/${user.id}/reset`, {});
       // Reset stats locally
@@ -115,6 +162,12 @@ export default function DataProvider({ children }) {
     try {
       const found = courses.find((c) => Number(c.id) === Number(id));
       if (found) return found;
+
+      // If in demo mode, just return from current state
+      if (isDemoMode) {
+        return null;
+      }
+
       // Backend expects /attendance/:userId/:courseId
       const res = await get(`/attendance/${user.id}/${id}`);
       const data = res?.data;
@@ -127,6 +180,13 @@ export default function DataProvider({ children }) {
 
   async function resetCourse(id) {
     try {
+      // If in demo mode, use demo methods
+      if (isDemoMode) {
+        const updated = demo.resetDemoCourseStats(id);
+        setCourses((c) => c.map((x) => (x.id === updated.id ? updated : x)));
+        return updated;
+      }
+
       // Backend expects /attendance/:userId/:courseId/reset
       const res = await post(`/attendance/${user.id}/${id}/reset`, {});
       const updated = res?.data;

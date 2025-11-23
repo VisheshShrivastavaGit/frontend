@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
+import { useDemo } from "./DemoProvider";
 
 const GoogleAuthContext = createContext(null);
 
@@ -28,12 +29,20 @@ function LoginButton({ onSuccess }) {
 export default function GoogleAuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const demo = useDemo();
 
   const backendUrl = import.meta.env.VITE_API_URL || "";
   const clientId =
     import.meta.env.VITE_GOOGLE_CLIENT_ID || "YOUR_GOOGLE_CLIENT_ID";
 
   React.useEffect(() => {
+    // If demo mode is active, use demo user
+    if (demo?.isDemoMode) {
+      setUser(demo.getDemoUser());
+      setLoading(false);
+      return;
+    }
+
     // Check if user is already logged in by calling a protected endpoint
     fetch(backendUrl + "/auth/me", {
       credentials: "include", // Important: send cookies
@@ -50,7 +59,7 @@ export default function GoogleAuthProvider({ children }) {
       .finally(() => {
         setLoading(false);
       });
-  }, [backendUrl]);
+  }, [backendUrl, demo?.isDemoMode]);
 
   async function handleLoginSuccess(codeResponse) {
     setLoading(true);
@@ -79,6 +88,12 @@ export default function GoogleAuthProvider({ children }) {
   }
 
   async function handleLogout() {
+    // If in demo mode, exit demo instead
+    if (demo?.isDemoMode) {
+      demo.exitDemo();
+      return;
+    }
+
     try {
       await fetch(backendUrl + "/auth/logout", {
         method: "POST",
@@ -90,7 +105,12 @@ export default function GoogleAuthProvider({ children }) {
     setUser(null);
   }
 
-  const value = { user, loading, handleLogout };
+  function handleDemoLogin() {
+    demo.enterDemo();
+    setUser(demo.getDemoUser());
+  }
+
+  const value = { user, loading, handleLogout, isDemoMode: demo?.isDemoMode };
 
   return (
     <GoogleOAuthProvider clientId={clientId}>
@@ -102,8 +122,43 @@ export default function GoogleAuthProvider({ children }) {
         ) : user ? (
           children
         ) : (
-          <div className="flex items-center justify-center min-h-screen">
-            <LoginButton onSuccess={handleLoginSuccess} />
+          <div className="flex flex-col items-center justify-center min-h-screen gap-4 p-4">
+            <div className="text-center mb-4">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                Attendance Tracker
+              </h1>
+              <p className="text-gray-600 dark:text-gray-300">
+                Track your attendance with ease
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-3 w-full max-w-xs">
+              <LoginButton onSuccess={handleLoginSuccess} />
+
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white dark:bg-gray-900 text-gray-500">
+                    or
+                  </span>
+                </div>
+              </div>
+
+              <button
+                onClick={handleDemoLogin}
+                className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors flex items-center justify-center gap-2"
+              >
+                <span>🎯</span>
+                Try Demo Mode
+              </button>
+            </div>
+
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-4 text-center max-w-xs">
+              Demo mode lets you explore the app without signing in. Your data
+              will be stored locally in your browser.
+            </p>
           </div>
         )}
       </GoogleAuthContext.Provider>
