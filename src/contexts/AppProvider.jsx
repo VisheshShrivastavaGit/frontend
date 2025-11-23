@@ -83,10 +83,8 @@ function AppProviderInner({ children }) {
         }
 
         // Check if user is already logged in by calling a protected endpoint
-        fetch(backendUrl + "/auth/me", {
-            credentials: "include",
-        })
-            .then((res) => res.json())
+        // Check if user is already logged in by calling a protected endpoint
+        get("/auth/me")
             .then((data) => {
                 if (data.ok && data.user) {
                     setUser(data.user);
@@ -134,13 +132,7 @@ function AppProviderInner({ children }) {
         setLoading(true);
         const { code } = codeResponse;
         try {
-            const res = await fetch(backendUrl + "/auth/google", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify({ code }),
-            });
-            const data = await res.json();
+            const data = await post("/auth/google", { code });
             if (data.ok && data.user) {
                 setUser(data.user);
             } else {
@@ -161,10 +153,7 @@ function AppProviderInner({ children }) {
         }
 
         try {
-            await fetch(backendUrl + "/auth/logout", {
-                method: "POST",
-                credentials: "include",
-            });
+            await post("/auth/logout");
         } catch (e) {
             console.error("Logout error:", e);
         }
