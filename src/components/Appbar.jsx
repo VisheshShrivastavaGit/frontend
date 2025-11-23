@@ -1,7 +1,6 @@
 import React from "react";
 import { useAuth } from "../contexts/AppProvider";
 import { Link } from "react-router-dom";
-import Searchbar from "./Searchbar";
 
 function UserButton() {
   return (
@@ -64,7 +63,7 @@ function DemoModeBadge() {
 
   return (
     <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-900 text-yellow-200 border border-yellow-700">
-      <span className="text-sm font-medium">🎯 Demo Mode</span>
+      <span className="text-sm font-medium">Demo Mode</span>
       <button
         onClick={handleLogout}
         className="text-xs hover:underline"
@@ -89,9 +88,6 @@ export default function Appbar({ onOpenSidebar }) {
       </div>
       <div className="flex items-center gap-2 md:gap-4 w-auto">
         {isDemoMode && <DemoModeBadge />}
-        <div className="hidden md:block w-64">
-          <Searchbar />
-        </div>
         <UserButton />
       </div>
     </header>
