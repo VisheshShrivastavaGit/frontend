@@ -183,8 +183,8 @@ export default function CourseForm() {
 
   return (
     <div className="max-w-xl mx-auto mt-8">
-      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">
+      <div className="bg-gray-900 rounded-xl shadow-lg p-6">
+        <h2 className="text-2xl font-bold mb-6 text-center text-white">
           {isEdit ? "Edit Course" : "Create New Course"}
         </h2>
         <form onSubmit={submit} className="space-y-5">
@@ -198,7 +198,7 @@ export default function CourseForm() {
               value={form.IndivCourse}
               onChange={change}
               required
-              className="w-full border rounded-lg p-3 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full border rounded-lg p-3 bg-gray-800 text-white focus:outline-none focus:ring focus:ring-blue-300"
               placeholder="e.g. Web Development, Data Structures"
             />
           </div>
@@ -210,7 +210,7 @@ export default function CourseForm() {
             </label>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">
+                <label className="block text-xs text-gray-400 mb-1">
                   Start Time
                 </label>
                 <input
@@ -219,11 +219,11 @@ export default function CourseForm() {
                   value={form.startTime}
                   onChange={change}
                   required
-                  className="w-full border rounded-lg p-3 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring focus:ring-blue-300"
+                  className="w-full border rounded-lg p-3 bg-gray-800 text-white focus:outline-none focus:ring focus:ring-blue-300"
                 />
               </div>
               <div>
-                <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">
+                <label className="block text-xs text-gray-400 mb-1">
                   End Time
                 </label>
                 <input
@@ -232,7 +232,7 @@ export default function CourseForm() {
                   value={form.endTime}
                   onChange={change}
                   required
-                  className="w-full border rounded-lg p-3 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring focus:ring-blue-300"
+                  className="w-full border rounded-lg p-3 bg-gray-800 text-white focus:outline-none focus:ring focus:ring-blue-300"
                 />
               </div>
             </div>
@@ -255,7 +255,7 @@ export default function CourseForm() {
                 type="number"
                 value={form.Totaldays}
                 onChange={change}
-                className="w-full border rounded-lg p-3 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring focus:ring-blue-300"
+                className="w-full border rounded-lg p-3 bg-gray-800 text-white focus:outline-none focus:ring focus:ring-blue-300"
               />
             </div>
             <div>
@@ -267,7 +267,7 @@ export default function CourseForm() {
                 type="number"
                 value={form.present}
                 onChange={change}
-                className="w-full border rounded-lg p-3 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring focus:ring-blue-300"
+                className="w-full border rounded-lg p-3 bg-gray-800 text-white focus:outline-none focus:ring focus:ring-blue-300"
               />
             </div>
             <div>
@@ -277,7 +277,7 @@ export default function CourseForm() {
                 type="number"
                 value={form.absent}
                 onChange={change}
-                className="w-full border rounded-lg p-3 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring focus:ring-blue-300"
+                className="w-full border rounded-lg p-3 bg-gray-800 text-white focus:outline-none focus:ring focus:ring-blue-300"
               />
             </div>
           </div>
@@ -293,7 +293,7 @@ export default function CourseForm() {
                 type="number"
                 value={form.cancelled}
                 onChange={change}
-                className="w-full border rounded-lg p-3 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring focus:ring-blue-300"
+                className="w-full border rounded-lg p-3 bg-gray-800 text-white focus:outline-none focus:ring focus:ring-blue-300"
               />
             </div>
             <div>
@@ -305,7 +305,7 @@ export default function CourseForm() {
                 type="number"
                 value={form.criteria}
                 onChange={change}
-                className="w-full border rounded-lg p-3 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring focus:ring-blue-300"
+                className="w-full border rounded-lg p-3 bg-gray-800 text-white focus:outline-none focus:ring focus:ring-blue-300"
               />
             </div>
           </div>
@@ -351,7 +351,7 @@ export default function CourseForm() {
                   onClick={() => toggleDay(day)}
                   className={`px-3 py-1 border rounded-lg shadow transition-colors duration-150 ${form.days.includes(day)
                     ? "bg-blue-600 text-white"
-                    : "bg-white text-black dark:bg-gray-800 dark:text-white"
+                    : "bg-white bg-gray-800 text-white"
                     }`}
                 >
                   {day.charAt(0).toUpperCase() + day.slice(1)}

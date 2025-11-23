@@ -2,13 +2,11 @@ import React from "react";
 import { get, del } from "../api";
 import { Link } from "react-router-dom";
 import { useData } from "../contexts/AppProvider";
-import { useApiCall } from "../hooks/useApiCall";
 import { SettingsCourseSkeleton } from "../components/Skeleton";
 
 export default function Settings() {
   const { courses, loading, error, deleteCourse, deleteAll, resetAllStats, resetCourse } =
     useData();
-  const { callApi } = useApiCall();
   const [deleting, setDeleting] = React.useState(null);
   const [deletingAll, setDeletingAll] = React.useState(false);
   const [resetting, setResetting] = React.useState(false);
@@ -18,42 +16,42 @@ export default function Settings() {
     if (!confirm("Reset ALL course stats (present/absent/cancelled) to zero?"))
       return;
 
-    await callApi(
-      () => resetAllStats(),
-      {
-        successMessage: "All course stats have been reset!",
-        onSuccess: () => setResetting(false),
-        onError: () => setResetting(false),
-      }
-    );
+    setResetting(true);
+    try {
+      await resetAllStats();
+      alert("All course stats have been reset!");
+    } catch (err) {
+      alert(err?.message || "Failed to reset stats");
+    } finally {
+      setResetting(false);
+    }
   }
 
   async function handleDelete(id) {
     if (!confirm("Delete this course?")) return;
 
     setDeleting(id);
-    await callApi(
-      () => deleteCourse(id),
-      {
-        silent: false,
-        onSuccess: () => setDeleting(null),
-        onError: () => setDeleting(null),
-      }
-    );
+    try {
+      await deleteCourse(id);
+    } catch (err) {
+      alert(err?.message || "Failed to delete course");
+    } finally {
+      setDeleting(null);
+    }
   }
 
   async function handleDeleteAll() {
     if (!confirm("Delete ALL courses? This cannot be undone.")) return;
 
     setDeletingAll(true);
-    await callApi(
-      () => deleteAll(),
-      {
-        successMessage: "All courses have been deleted!",
-        onSuccess: () => setDeletingAll(false),
-        onError: () => setDeletingAll(false),
-      }
-    );
+    try {
+      await deleteAll();
+      alert("All courses have been deleted!");
+    } catch (err) {
+      alert(err?.message || "Failed to delete all courses");
+    } finally {
+      setDeletingAll(false);
+    }
   }
 
   async function handleResetCourse(id) {
@@ -61,14 +59,14 @@ export default function Settings() {
       return;
 
     setResettingCourse(id);
-    await callApi(
-      () => resetCourse(id),
-      {
-        successMessage: "Course stats have been reset!",
-        onSuccess: () => setResettingCourse(null),
-        onError: () => setResettingCourse(null),
-      }
-    );
+    try {
+      await resetCourse(id);
+      alert("Course stats have been reset!");
+    } catch (err) {
+      alert(err?.message || "Failed to reset course");
+    } finally {
+      setResettingCourse(null);
+    }
   }
 
   return (

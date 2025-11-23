@@ -1,27 +1,10 @@
 import React from "react";
-import { useEffect, useState } from "react";
-import { get } from "../api";
 import { useAuth, useData } from "../contexts/AppProvider";
 
 export default function Profile() {
-  // const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const { user } = useAuth();
   const { courses } = useData();
 
-  // useEffect(() => {
-  //   setLoading(true);
-  //   get(`/auth/${userInfo.email_address}`)
-  //     .then((res) => {
-  //       setUser(res?.user);
-  //       setError(null);
-  //     })
-  //     .catch((err) => {
-  //       setError(err?.message || "Failed to load profile");
-  //     })
-  //     .finally(() => setLoading(false));
-  // }, []);
 
   if (!user)
     return (

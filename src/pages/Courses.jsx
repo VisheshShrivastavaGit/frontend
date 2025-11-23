@@ -9,13 +9,13 @@ export default function Courses() {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+        <h2 className="text-2xl font-semibold text-white">
           Courses
         </h2>
         <div>
           <Link
             to="/courses/new"
-            className="px-3 py-1 bg-blue-600 dark:bg-blue-500 text-white rounded"
+            className="px-3 py-1 bg-blue-500 text-white rounded"
           >
             New Course
           </Link>
@@ -23,7 +23,7 @@ export default function Courses() {
       </div>
 
       {loading && (
-        <div className="mt-6 text-gray-600 dark:text-gray-300">
+        <div className="mt-6 text-gray-300">
           Loading courses…
         </div>
       )}
@@ -32,7 +32,7 @@ export default function Courses() {
       {!loading && !error && (
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {courses.length === 0 && (
-            <div className="text-gray-600 dark:text-gray-300">
+            <div className="text-gray-300">
               No courses found.
             </div>
           )}
