@@ -1,15 +1,16 @@
 # Attendance Tracker - Frontend 🎨
 
-A modern, desktop-first React application for tracking course attendance. Built with simplicity and performance in mind.
+A modern, desktop-first React application for tracking course attendance. Built with simplicity, performance, and seamless Google integration in mind.
 
 ## 🚀 Features
 
-- **OAuth 2.0 Authentication**: Secure sign-in with Google.
+- **OAuth 2.0 Authentication**: Secure sign-in with Google (Authorization Code Flow).
+- **Google Calendar Sync**: Automatically syncs attendance status (Present/Absent) to your Google Calendar with color-coded events.
 - **Permanent Dark Mode**: Sleek, eye-friendly dark UI.
 - **Dashboard**: Visual overview of attendance stats and course status.
 - **Course Management**: Create, edit, and delete courses with ease.
 - **Attendance Tracking**: Mark classes as Present, Absent, or Cancelled.
-- **Demo Mode**: Try all features without signing in.
+- **Demo Mode**: Try all features without signing in (Local Storage).
 - **Smart Analytics**: Color-coded indicators for attendance criteria (Green/Red).
 
 ## 🛠️ Tech Stack
@@ -17,8 +18,9 @@ A modern, desktop-first React application for tracking course attendance. Built 
 - **Framework**: React (Vite)
 - **Styling**: Tailwind CSS (Permanent Dark Mode)
 - **Routing**: React Router DOM v6
-- **State Management**: React Context API (AppProvider)
-- **Icons**: Heroicons (via SVG)
+- **State Management**: React Context API (Unified `AppProvider`)
+- **Auth**: `@react-oauth/google`
+- **Icons**: Heroicons
 - **HTTP Client**: Axios (with interceptors & auto-cookie handling)
 
 ## 📂 Project Structure
@@ -57,7 +59,7 @@ src/
 2.  **Environment Setup**
     Create a `.env` file in the root:
     ```env
-    VITE_API_URL=http://localhost:3000/api
+    VITE_API_URL=http://localhost:3000
     VITE_GOOGLE_CLIENT_ID=your_google_client_id
     ```
 
@@ -69,6 +71,6 @@ src/
 ## 🎯 Key Design Decisions
 
 - **Desktop-Only**: Optimized for browser usage on laptops/desktops.
-- **Simplified State**: Merged multiple contexts into a single `AppProvider` for easier maintenance.
-- **Nested Routing**: Organized `/courses` routes for better structure.
+- **Unified Context**: Merged multiple contexts into a single `AppProvider` for easier maintenance.
+- **Secure Auth**: Uses HttpOnly cookies for session management (no tokens in localStorage).
 - **Axios Layer**: Centralized API configuration for automatic cookie handling.
