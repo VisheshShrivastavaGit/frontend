@@ -351,7 +351,7 @@ export default function CourseForm() {
                   onClick={() => toggleDay(day)}
                   className={`px-3 py-1 border rounded-lg shadow transition-colors duration-150 ${form.days.includes(day)
                     ? "bg-blue-600 text-white"
-                    : "bg-white bg-gray-800 text-white"
+                    : "bg-gray-700 text-gray-300 hover:bg-gray-600"
                     }`}
                 >
                   {day.charAt(0).toUpperCase() + day.slice(1)}
